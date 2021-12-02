@@ -10,6 +10,10 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 
 public class ViewInicial {
 
@@ -81,5 +85,28 @@ public class ViewInicial {
 		botaoEntrar.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
 		botaoEntrar.setBounds(254, 343, 125, 30);
 		frame.getContentPane().add(botaoEntrar);
+		
+		JLabel lblSemCadastro = new JLabel("Não está cadastrado?");
+		lblSemCadastro.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ViewCadastro.main(null);
+				frame.setVisible(false);
+			}
+		});
+		lblSemCadastro.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				if(lblSemCadastro.getForeground() == Color.BLACK) {
+					lblSemCadastro.setForeground(Color.BLUE);
+				} else {
+					lblSemCadastro.setForeground(Color.BLACK);
+				}
+			}
+		});
+		lblSemCadastro.setForeground(Color.BLACK);
+		lblSemCadastro.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblSemCadastro.setBounds(245, 390, 143, 14);
+		frame.getContentPane().add(lblSemCadastro);
 	}
 }
