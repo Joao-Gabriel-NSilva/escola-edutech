@@ -65,7 +65,7 @@ public class Aluno implements Comparable<Aluno>{
 
 	@Override
 	public int compareTo(Aluno aluno) {
-		return this.nome.compareTo(aluno.getCgm());
+		return this.cgm.compareTo(aluno.getCgm());
 	}
 
 	@Override

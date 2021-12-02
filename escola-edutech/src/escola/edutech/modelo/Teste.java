@@ -16,8 +16,9 @@ public class Teste {
 				"Manhã", "ATIVO");
 		Aluno aluno4 = new Aluno("Felipe", "Felipe@escola.pr.gov.br", "3A2021EED", "56734512", 
 				"Manhã", "ATIVO");
-		Aluno aluno5 = new Aluno("Matheus", "Matheus@escola.pr.gov.br", "3A2021EED", "2465732", 
+		Aluno aluno5 = new Aluno("Matheus", "Matheus@escola.pr.gov.br", "3A2021EED", "12345678", 
 				"Manhã", "ATIVO");
+		
 		
 		AlunoDAO.adicionar(aluno1);
 		AlunoDAO.adicionar(aluno2);
@@ -32,6 +33,7 @@ public class Teste {
 		
 		AlunoDAO.listar().forEach(aluno -> {System.out.println(aluno);});
 		System.out.println(professor1);
+		System.out.println(AlunoDAO.jaExiste(aluno5));
 	}
 
 }
