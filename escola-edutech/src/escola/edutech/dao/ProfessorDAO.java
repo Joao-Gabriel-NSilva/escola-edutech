@@ -8,7 +8,9 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import escola.edutech.modelo.Professor;
@@ -16,18 +18,20 @@ import escola.edutech.modelo.Professor;
 public class ProfessorDAO {
 
 	private static File arquivoProfessores = new File("dados/professores.csv");
-	private static File arquivoLogin = new File("dados/logins");
+	private static File arquivoLogin = new File("dados/logins.csv");
 
-	public static void adicionar(Professor professor) {
+	public static boolean adicionar(Professor professor) {
 		pathBuilder(arquivoProfessores);
 		try (FileWriter writer = new FileWriter(arquivoProfessores, true)) {
 			try (PrintWriter saida = new PrintWriter(writer, true)) {
 				saida.println(professor.getNome() + ";" + professor.getEmail() + ";" + professor.getTurmas() + ";"
 						+ professor.getTurno());
+				return true;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	public static List<Professor> listar() {
@@ -88,5 +92,28 @@ public class ProfessorDAO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static Map<String, String> listaLogins() {
+		pathBuilder(arquivoLogin);
+		Map<String, String> listaLogins = new HashMap<>();
+		try {
+			Scanner scanner = new Scanner(arquivoLogin, "UTF-8");
+			while (scanner.hasNextLine()) {
+				String linha = scanner.nextLine();
+				Scanner linhaScanner = new Scanner(linha);
+				linhaScanner.useDelimiter(";");
+
+				String email = linhaScanner.next();
+				String senha = linhaScanner.next();
+
+				listaLogins.put(email, senha);
+				linhaScanner.close();
+			}
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return listaLogins;
 	}
 }

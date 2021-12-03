@@ -1,25 +1,16 @@
 package escola.edutech.view;
 
 import java.awt.EventQueue;
+import java.awt.Font;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import java.awt.BorderLayout;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
 import javax.swing.JButton;
-import java.awt.Color;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ViewInicial {
 
 	private JFrame frame;
-	private JTextField textFieldEmail;
-	private JPasswordField passwordField;
 
 	/**
 	 * Launch the application.
@@ -51,62 +42,30 @@ public class ViewInicial {
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Arial Narrow", Font.PLAIN, 11));
 		frame.setBounds(100, 100, 650, 500);
+		frame.setLocation(600, 200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel lblBemVindo = new JLabel("BEM VINDO");
-		lblBemVindo.setBounds(0, 0, 634, 41);
-		lblBemVindo.setFont(new Font("Arial Narrow", Font.PLAIN, 35));
-		lblBemVindo.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(lblBemVindo);
+		JButton btnCadastrarAluno = new JButton("CADASTRAR ALUNO");
+		btnCadastrarAluno.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
+		btnCadastrarAluno.setBounds(197, 150, 249, 57);
+		frame.getContentPane().add(btnCadastrarAluno);
 		
-		textFieldEmail = new JTextField();
-		textFieldEmail.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 17));
-		textFieldEmail.setBounds(152, 186, 330, 30);
-		frame.getContentPane().add(textFieldEmail);
-		textFieldEmail.setColumns(10);
+		JButton btnConsultarCadastro = new JButton("CONSULTAR CADASTRO");
+		btnConsultarCadastro.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
+		btnConsultarCadastro.setBounds(197, 255, 249, 57);
+		frame.getContentPane().add(btnConsultarCadastro);
 		
-		passwordField = new JPasswordField();
-		passwordField.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 17));
-		passwordField.setBounds(152, 259, 330, 30);
-		frame.getContentPane().add(passwordField);
-		
-		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setFont(new Font("Arial", Font.PLAIN, 19));
-		lblEmail.setBounds(66, 194, 64, 14);
-		frame.getContentPane().add(lblEmail);
-		
-		JLabel lblSenha = new JLabel("Senha:");
-		lblSenha.setFont(new Font("Arial", Font.PLAIN, 19));
-		lblSenha.setBounds(66, 267, 64, 14);
-		frame.getContentPane().add(lblSenha);
-		
-		JButton botaoEntrar = new JButton("ENTRAR");
-		botaoEntrar.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
-		botaoEntrar.setBounds(254, 343, 125, 30);
-		frame.getContentPane().add(botaoEntrar);
-		
-		JLabel lblSemCadastro = new JLabel("Não está cadastrado?");
-		lblSemCadastro.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ViewCadastro.main(null);
+		JButton btnLogout = new JButton("Logout");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
+				ViewLogin.main(null);
 			}
 		});
-		lblSemCadastro.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				if(lblSemCadastro.getForeground() == Color.BLACK) {
-					lblSemCadastro.setForeground(Color.BLUE);
-				} else {
-					lblSemCadastro.setForeground(Color.BLACK);
-				}
-			}
-		});
-		lblSemCadastro.setForeground(Color.BLACK);
-		lblSemCadastro.setFont(new Font("Arial", Font.PLAIN, 15));
-		lblSemCadastro.setBounds(245, 390, 143, 14);
-		frame.getContentPane().add(lblSemCadastro);
+		btnLogout.setFont(new Font("Arial Narrow", Font.PLAIN, 15));
+		btnLogout.setBounds(0, 0, 77, 27);
+		frame.getContentPane().add(btnLogout);
 	}
 }

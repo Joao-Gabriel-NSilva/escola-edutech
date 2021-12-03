@@ -62,7 +62,9 @@ public class ViewCadastro {
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Arial Narrow", Font.PLAIN, 11));
 		frame.setBounds(100, 100, 650, 500);
+		frame.setLocation(600, 200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNome = new JLabel("Nome:");
@@ -93,7 +95,7 @@ public class ViewCadastro {
 		frame.getContentPane().add(lblTurmas);
 		
 		textFieldTurmas = new JTextField();
-		textFieldTurmas.setToolTipText("Insira o código de suas turmas separados por \";\".");
+		textFieldTurmas.setToolTipText("Insira o código de suas turmas separados por vírgula.");
 		textFieldTurmas.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 17));
 		textFieldTurmas.setColumns(10);
 		textFieldTurmas.setBounds(174, 223, 330, 30);
@@ -160,9 +162,22 @@ public class ViewCadastro {
 						listaTurmas.add(turma);
 					}
 					
-					ProfessorDAO.adicionar(new Professor(textFieldNome.getText(), textFieldEmail.getText(), listaTurmas, 
-							textFieldTurno.getText()));
-					ProfessorDAO.salvaLogin(textFieldEmail.getText(), passwordField.getText());
+					if(ProfessorDAO.adicionar(new Professor(textFieldNome.getText(), textFieldEmail.getText(), listaTurmas, 
+							textFieldTurno.getText()))) {
+						
+						String senha;
+						if (passwordField.isEnabled()) {
+							senha = passwordField.getText();
+						} else {
+							senha = textFieldSenha.getText();
+						}
+						
+						ProfessorDAO.salvaLogin(textFieldEmail.getText(), senha);
+						JOptionPane.showMessageDialog(null, "Cadastro concluido!", "", JOptionPane.WARNING_MESSAGE);
+						
+						frame.setVisible(false);
+						ViewLogin.main(null);
+					}
 					
 				} catch(RuntimeException ex) {
 					JOptionPane.showMessageDialog(null, ex.getMessage(), "ERRO", JOptionPane.WARNING_MESSAGE);

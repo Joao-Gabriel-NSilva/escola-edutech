@@ -2,6 +2,9 @@ package escola.edutech.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import escola.edutech.dao.ProfessorDAO;
 
 public class Professor {
 
@@ -36,7 +39,7 @@ public class Professor {
 	}
 
 	private boolean verificaInformacoes(String nome, String email, List<String> turmas, String turno) {
-		if(nome.strip().isEmpty()) {
+		if (nome.strip().isEmpty()) {
 			throw new RuntimeException("Informe seu nome!");
 		} else {
 			verificaSeHaNumero(nome);
@@ -44,14 +47,17 @@ public class Professor {
 		}
 
 		if (!email.strip().isEmpty() & email.strip().endsWith("@escola.pr.gov.br")) {
+			if (ProfessorDAO.listaLogins().containsKey(email.strip())) {
+				throw new RuntimeException("O email já está cadastrado!");
+			}
 			this.email = email.strip();
 		} else {
 			throw new RuntimeException("Informe seu email ou verifique se ele pertencer ao dominio @escola.pr.gov.br");
 		}
-		
+
 		this.turmas = turmas;
-		
-		if(turno.strip().isEmpty()) {
+
+		if (turno.strip().isEmpty()) {
 			throw new RuntimeException("Informe seu turno!");
 		} else {
 			verificaSeHaNumero(turno);
@@ -66,7 +72,7 @@ public class Professor {
 				Integer.parseInt(string);
 				throw new RuntimeException("Não coloque números no campo indevido! ");
 			} catch (NumberFormatException e) {
-				
+
 			}
 		}
 	}
