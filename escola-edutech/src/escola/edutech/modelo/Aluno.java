@@ -1,6 +1,5 @@
 package escola.edutech.modelo;
 
-
 public class Aluno implements Comparable<Aluno>{
 
 	private String nome;
@@ -11,17 +10,7 @@ public class Aluno implements Comparable<Aluno>{
 	private String status;
 
 	public Aluno(String nome, String email, String turma, String cgm, String turno, String status) {
-		this.nome = nome;
-		if(verificaEmail(email)) {
-			this.email = email;
-		} else {
-			throw new RuntimeException("O email deve pertencer ao dominio @escola.pr.gov.br");
-		}
-		this.turma = turma;
-		this.cgm = cgm;
-		this.cgm = cgm;
-		this.turno = turno;
-		this.status = status;
+		verificaInformacoes(nome, email, turma, cgm, turno, status);
 	}
 
 	public String getNome() {
@@ -91,6 +80,67 @@ public class Aluno implements Comparable<Aluno>{
 		} else if (!cgm.equals(other.cgm))
 			return false;
 		return true;
+	}
+	
+	private boolean verificaInformacoes(String nome, String email, String turma, String cgm, String turno, String status) {
+		if(nome.strip().isEmpty()) {
+			throw new RuntimeException("Informe o nome do aluno!");
+		} else {
+			verificaSeHaNumero(nome);
+			this.nome = nome.strip();
+		}
+
+		if (!email.strip().isEmpty() & email.strip().endsWith("@escola.pr.gov.br")) {
+			this.email = email.strip();
+		} else {
+			throw new RuntimeException("Informe o email do aluno ou verifique se ele pertencer ao dominio @escola.pr.gov.br");
+		}
+		
+		if(turma.strip().isEmpty()) {
+			throw new RuntimeException("Informe o código da turma do aluno!");
+		} else if(turma.length() < 9 | turma.length() > 9) {
+			throw new RuntimeException("O código da turma deve conter nove digitos! Exemplo: 3A2021EED (série + ano + EED");
+		} else {
+			this.turma = turma.strip();
+		}
+		
+		if(cgm.strip().isEmpty()) {
+			throw new RuntimeException("Informe o cgm do aluno!");
+		} else {
+			for (String string : cgm.split("")) {
+				try {
+					Integer.parseInt(string);
+				} catch (NumberFormatException e) {
+					throw new RuntimeException("Não coloque letras no CGM! ");
+				}
+			}
+			this.cgm = cgm.strip();
+		}
+		
+		if(turno.strip().isEmpty()) {
+			throw new RuntimeException("Informe o turno do aluno!");
+		} else {
+			verificaSeHaNumero(turno);
+			this.turno = turno;
+		}
+		
+		if(status.strip().isEmpty()) {
+			throw new RuntimeException("Informe o status do aluno!");
+		} else if(status.strip().toLowerCase().equals("ativo") | status.strip().toLowerCase().equals("inativo")){
+			this.status = status.strip().toUpperCase();
+		}
+		return true;
+	}
+
+	private void verificaSeHaNumero(String outraString) {
+		for (String string : outraString.split("")) {
+			try {
+				Integer.parseInt(string);
+				throw new RuntimeException("Não coloque números no campo indevido! ");
+			} catch (NumberFormatException e) {
+				
+			}
+		}
 	}
 
 }
