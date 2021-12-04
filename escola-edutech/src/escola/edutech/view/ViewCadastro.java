@@ -30,7 +30,7 @@ public class ViewCadastro {
 	private JLabel lblSenha;
 	private JCheckBox chckbxMostrarSenha;
 	private JTextField textFieldSenha;
-	private JButton botaoEntrar;
+	private JButton botaoCadastrar;
 
 	/**
 	 * Launch the application.
@@ -115,7 +115,7 @@ public class ViewCadastro {
 		JLabel lblCadastroDeProfessor = new JLabel("CADASTRO DE PROFESSOR");
 		lblCadastroDeProfessor.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCadastroDeProfessor.setFont(new Font("Arial Narrow", Font.PLAIN, 35));
-		lblCadastroDeProfessor.setBounds(0, 0, 634, 41);
+		lblCadastroDeProfessor.setBounds(5, 0, 634, 41);
 		frame.getContentPane().add(lblCadastroDeProfessor);
 		
 		lblSenha = new JLabel("Senha:");
@@ -151,8 +151,8 @@ public class ViewCadastro {
 		chckbxMostrarSenha.setBounds(517, 349, 111, 23);
 		frame.getContentPane().add(chckbxMostrarSenha);
 		
-		botaoEntrar = new JButton("ENTRAR");
-		botaoEntrar.addActionListener(new ActionListener() {
+		botaoCadastrar = new JButton("CADASTRAR");
+		botaoCadastrar.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -162,8 +162,8 @@ public class ViewCadastro {
 						listaTurmas.add(turma);
 					}
 					
-					if(ProfessorDAO.adicionar(new Professor(textFieldNome.getText(), textFieldEmail.getText(), listaTurmas, 
-							textFieldTurno.getText()))) {
+					if(ProfessorDAO.adicionar(new Professor(textFieldNome.getText(), textFieldEmail.getText(), 
+							listaTurmas, textFieldTurno.getText()))) {
 						
 						String senha;
 						if (passwordField.isEnabled()) {
@@ -175,6 +175,7 @@ public class ViewCadastro {
 						ProfessorDAO.salvaLogin(textFieldEmail.getText(), senha);
 						JOptionPane.showMessageDialog(null, "Cadastro concluido!", "", JOptionPane.WARNING_MESSAGE);
 						
+						
 						frame.setVisible(false);
 						ViewLogin.main(null);
 					}
@@ -185,8 +186,8 @@ public class ViewCadastro {
 			}
 
 		});
-		botaoEntrar.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
-		botaoEntrar.setBounds(254, 401, 125, 30);
-		frame.getContentPane().add(botaoEntrar);
+		botaoCadastrar.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
+		botaoCadastrar.setBounds(243, 401, 157, 30);
+		frame.getContentPane().add(botaoCadastrar);
 	}
 }

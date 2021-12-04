@@ -37,15 +37,6 @@ public class Aluno implements Comparable<Aluno>{
 		return status;
 	}
 	
-	private boolean verificaEmail(String email) {
-		String dominio = "@escola.pr.gov.br";
-		
-		if(email.endsWith(dominio)) {
-			return true;
-		}
-		return false;
-	}
-	
 	@Override
 	public String toString() {
 		return new String(nome + ", " + email + ", " + turma + ", " + cgm + ", " + turno + ", " + status);

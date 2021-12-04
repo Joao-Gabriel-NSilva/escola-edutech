@@ -20,17 +20,19 @@ public class AlunoDAO {
 	private static File arquivoCgms = new File("dados/cgms.csv");
 	private static List<String> cgms = new ArrayList<>();
 
-	public static void adicionar(Aluno aluno) {
+	public static boolean adicionar(Aluno aluno) {
 		pathBuilder();
 		try (FileWriter writer = new FileWriter(arquivoAlunos, true)) {
 			try (PrintWriter saida = new PrintWriter(writer, true)) {
 				saida.println(aluno.getNome() + ";" + aluno.getEmail() + ";" + aluno.getTurma() + ";" + aluno.getCgm()
 						+ ";" + aluno.getTurno() + ";" + aluno.getStatus());
 				adicionaCgm(aluno.getCgm());
+				return true;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	public static List<Aluno> listar() {
