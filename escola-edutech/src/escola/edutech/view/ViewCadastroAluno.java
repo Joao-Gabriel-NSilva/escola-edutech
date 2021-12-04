@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import escola.edutech.dao.AlunoDAO;
 import escola.edutech.modelo.Aluno;
@@ -33,6 +34,11 @@ public class ViewCadastroAluno {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("com.formdev.flatlaf.FlatIntelliJLaf");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -112,7 +118,7 @@ public class ViewCadastroAluno {
 		JLabel lblCadastroDeAlunos = new JLabel("CADASTRO DE ALUNOS");
 		lblCadastroDeAlunos.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCadastroDeAlunos.setFont(new Font("Arial Narrow", Font.PLAIN, 35));
-		lblCadastroDeAlunos.setBounds(5, 0, 634, 41);
+		lblCadastroDeAlunos.setBounds(0, 0, 634, 41);
 		frame.getContentPane().add(lblCadastroDeAlunos);
 		
 		lblStatus = new JLabel("Status:");
@@ -134,7 +140,7 @@ public class ViewCadastroAluno {
 							textFieldCgm.getText(), textFieldTurno.getText(), textFieldStatus.getText());
 					if (!AlunoDAO.jaExiste(aluno)) {
 						if(AlunoDAO.adicionar(aluno)) {
-							JOptionPane.showMessageDialog(null, "Cadastro concluido!", "", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Cadastro concluido!", "", JOptionPane.INFORMATION_MESSAGE);
 							textFieldNome.setText(null);
 							textFieldEmail.setText(null);
 							textFieldTurma.setText(null);
@@ -165,5 +171,17 @@ public class ViewCadastroAluno {
 		lblCgm.setFont(new Font("Arial", Font.PLAIN, 19));
 		lblCgm.setBounds(87, 251, 64, 14);
 		frame.getContentPane().add(lblCgm);
+		
+		JButton btnVoltar = new JButton("VOLTAR");
+		btnVoltar.setHorizontalAlignment(SwingConstants.RIGHT);
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+				ViewInicial.main(null);
+			}
+		});
+		btnVoltar.setFont(new Font("Arial Narrow", Font.PLAIN, 13));
+		btnVoltar.setBounds(0, 0, 77, 30);
+		frame.getContentPane().add(btnVoltar);
 	}
 }

@@ -102,7 +102,7 @@ public class Aluno implements Comparable<Aluno>{
 				try {
 					Integer.parseInt(string);
 				} catch (NumberFormatException e) {
-					throw new RuntimeException("Não coloque letras no CGM! ");
+					throw new RuntimeException("Não coloque letras no CGM!");
 				}
 			}
 			this.cgm = cgm.strip();
@@ -119,6 +119,8 @@ public class Aluno implements Comparable<Aluno>{
 			throw new RuntimeException("Informe o status do aluno!");
 		} else if(status.strip().toLowerCase().equals("ativo") | status.strip().toLowerCase().equals("inativo")){
 			this.status = status.strip().toUpperCase();
+		} else {
+			throw new RuntimeException("Status inválido! Utilize 'ativo' ou 'inativo'.");
 		}
 		return true;
 	}

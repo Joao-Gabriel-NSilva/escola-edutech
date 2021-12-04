@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,11 @@ public class ViewInicial {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("com.formdev.flatlaf.FlatIntelliJLaf");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -48,6 +54,12 @@ public class ViewInicial {
 		frame.getContentPane().setLayout(null);
 		
 		JButton btnCadastrarAluno = new JButton("CADASTRAR ALUNO");
+		btnCadastrarAluno.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+				ViewCadastroAluno.main(null);
+			}
+		});
 		btnCadastrarAluno.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
 		btnCadastrarAluno.setBounds(197, 150, 249, 57);
 		frame.getContentPane().add(btnCadastrarAluno);
