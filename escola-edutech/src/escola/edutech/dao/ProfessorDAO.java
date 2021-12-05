@@ -13,12 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import escola.edutech.modelo.Aluno;
 import escola.edutech.modelo.Professor;
+import escola.edutech.view.ViewLogin;
 
 public class ProfessorDAO {
 
 	private static File arquivoProfessores = new File("dados/professores.csv");
 	private static File arquivoLogin = new File("dados/logins.csv");
+	private static File arquivoAlunosProfessor = new File("dados/alunosDoProfessor" + ViewLogin.PROFESSOR_LOGADO.getNome() 
+	+ ".csv");
 
 	public static boolean adicionar(Professor professor) {
 		pathBuilder(arquivoProfessores);
@@ -55,12 +59,13 @@ public class ProfessorDAO {
 					} else if(turma.endsWith("]")) {
 						turma = turma.replace("]", "");
 					}
+					turma = turma.strip();
 					listaTurmas.add(turma);
 				}
 				
 				String turno = linhaScanner.next();
 
-				professores.add(new Professor(nome, email, listaTurmas, turno));
+				professores.add(new Professor(nome, email, listaTurmas, turno, false));
 				linhaScanner.close();
 			}
 			scanner.close();
@@ -116,4 +121,39 @@ public class ProfessorDAO {
 		}
 		return listaLogins;
 	}
+	
+	public static void adicionaTurma(Professor professorLogado, String turma) {
+		if(turma.strip().isEmpty()) {
+			throw new RuntimeException("Informe o código da turma!");
+		} else if(turma.length() < 9 | turma.length() > 9) {
+			throw new RuntimeException("O código da turma deve conter nove digitos! Exemplo: 3A2021EED (série + ano + EED");
+		} else {
+			
+			List<Professor> professores = listar();
+			try {
+				new FileWriter(arquivoProfessores).close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			for (Professor professorArquivo : professores) {
+				if(professorLogado.equals(professorArquivo)) {
+					professorLogado.getTurmas().add(turma);
+					adicionar(new Professor(professorLogado.getNome(), professorLogado.getEmail(), 
+							professorLogado.getTurmas(), professorLogado.getTurno(), false));
+				} else {
+					adicionar(professorArquivo);
+				}
+			}
+		}
+	}
+	
+	public static void adicionaAluno(Professor professorLogado, Aluno aluno) {
+		AlunoDAO.adicionar(aluno, arquivoAlunosProfessor, false);
+	}
+	
+	public static List<Aluno> listarAlunos() {
+		return AlunoDAO.listar(arquivoAlunosProfessor);
+	}
 }
+

@@ -2,7 +2,6 @@ package escola.edutech.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import escola.edutech.dao.ProfessorDAO;
 
@@ -12,9 +11,17 @@ public class Professor {
 	private String email;
 	private List<String> turmas = new ArrayList<>();
 	private String turno;
+	private List<Aluno> alunos;
 
-	public Professor(String nome, String email, List<String> turmas, String turno) {
-		verificaInformacoes(nome, email, turmas, turno);
+	public Professor(String nome, String email, List<String> turmas, String turno, boolean fazVerificacao) {
+		if(fazVerificacao) {
+			verificaInformacoes(nome, email, turmas, turno);
+		} else {
+			this.nome = nome;
+			this.email = email;
+			this.turmas = turmas;
+			this.turno = turno;
+		}
 	}
 
 	public String getNome() {
@@ -31,6 +38,10 @@ public class Professor {
 
 	public String getTurno() {
 		return turno;
+	}
+	
+	public List<Aluno> getAlunos(){
+		return alunos;
 	}
 
 	@Override
@@ -75,5 +86,36 @@ public class Professor {
 
 			}
 		}
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Professor other = (Professor) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		return true;
 	}
 }

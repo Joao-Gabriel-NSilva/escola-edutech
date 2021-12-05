@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 
 public class ViewInicial {
 
-	private JFrame frame;
+	private JFrame frmMenuInicial;
 
 	/**
 	 * Launch the application.
@@ -26,7 +26,7 @@ public class ViewInicial {
 			public void run() {
 				try {
 					ViewInicial window = new ViewInicial();
-					window.frame.setVisible(true);
+					window.frmMenuInicial.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -45,39 +45,51 @@ public class ViewInicial {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setFont(new Font("Arial Narrow", Font.PLAIN, 11));
-		frame.setBounds(100, 100, 650, 500);
-		frame.setLocation(600, 200);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
-		frame.getContentPane().setLayout(null);
+		frmMenuInicial = new JFrame();
+		frmMenuInicial.setTitle("Menu Inicial");
+		frmMenuInicial.getContentPane().setFont(new Font("Arial Narrow", Font.PLAIN, 11));
+		frmMenuInicial.setBounds(100, 100, 650, 500);
+		frmMenuInicial.setLocation(600, 200);
+		frmMenuInicial.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmMenuInicial.setResizable(false);
+		frmMenuInicial.getContentPane().setLayout(null);
 		
 		JButton btnCadastrarAluno = new JButton("CADASTRAR ALUNO");
 		btnCadastrarAluno.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
+				frmMenuInicial.setVisible(false);
 				ViewCadastroAluno.main(null);
 			}
 		});
 		btnCadastrarAluno.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
-		btnCadastrarAluno.setBounds(197, 150, 249, 57);
-		frame.getContentPane().add(btnCadastrarAluno);
+		btnCadastrarAluno.setBounds(197, 114, 249, 57);
+		frmMenuInicial.getContentPane().add(btnCadastrarAluno);
 		
 		JButton btnConsultarCadastro = new JButton("CONSULTAR CADASTRO");
 		btnConsultarCadastro.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
-		btnConsultarCadastro.setBounds(197, 255, 249, 57);
-		frame.getContentPane().add(btnConsultarCadastro);
+		btnConsultarCadastro.setBounds(197, 219, 249, 57);
+		frmMenuInicial.getContentPane().add(btnConsultarCadastro);
 		
 		JButton btnLogout = new JButton("Logout");
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
+				frmMenuInicial.setVisible(false);
 				ViewLogin.main(null);
 			}
 		});
 		btnLogout.setFont(new Font("Arial Narrow", Font.PLAIN, 15));
 		btnLogout.setBounds(0, 0, 77, 27);
-		frame.getContentPane().add(btnLogout);
+		frmMenuInicial.getContentPane().add(btnLogout);
+		
+		JButton btnAdicionarTurma = new JButton("ADICIONAR TURMA");
+		btnAdicionarTurma.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frmMenuInicial.setVisible(false);
+				ViewAdicionarTurma.main(null);
+			}
+		});
+		btnAdicionarTurma.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
+		btnAdicionarTurma.setBounds(197, 320, 249, 57);
+		frmMenuInicial.getContentPane().add(btnAdicionarTurma);
 	}
 }

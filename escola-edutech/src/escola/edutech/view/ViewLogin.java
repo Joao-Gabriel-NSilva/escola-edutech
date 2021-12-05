@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -21,6 +22,9 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import escola.edutech.dao.ProfessorDAO;
+import escola.edutech.modelo.Professor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ViewLogin {
 
@@ -28,6 +32,7 @@ public class ViewLogin {
 	private JTextField textFieldEmail;
 	private JPasswordField passwordField;
 	private JTextField textFieldSenha;
+	public static Professor PROFESSOR_LOGADO;
 
 	/**
 	 * Launch the application.
@@ -62,6 +67,14 @@ public class ViewLogin {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textFieldEmail.setFocusable(false);
+				passwordField.setFocusable(false);
+				textFieldSenha.setFocusable(false);
+			}
+		});
 		frame.setTitle("LOGIN");
 		frame.getContentPane().setFont(new Font("Arial Narrow", Font.PLAIN, 11));
 		frame.setBounds(100, 100, 650, 500);
@@ -77,12 +90,24 @@ public class ViewLogin {
 		frame.getContentPane().add(lblBemVindo);
 		
 		textFieldEmail = new JTextField();
+		textFieldEmail.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textFieldEmail.setFocusable(true);
+			}
+		});
 		textFieldEmail.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 17));
 		textFieldEmail.setBounds(152, 186, 330, 30);
 		frame.getContentPane().add(textFieldEmail);
 		textFieldEmail.setColumns(10);
 		
 		passwordField = new JPasswordField();
+		passwordField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				passwordField.setFocusable(true);
+			}
+		});
 		passwordField.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 17));
 		passwordField.setBounds(152, 259, 330, 30);
 		frame.getContentPane().add(passwordField);
@@ -111,6 +136,12 @@ public class ViewLogin {
 				try {
 					if(logins.containsKey(textFieldEmail.getText().strip()) & 
 							logins.get(textFieldEmail.getText().strip()).equals(senha)) {
+						List<Professor> professores = ProfessorDAO.listar();
+						for (Professor professor : professores) {
+							if(professor.getEmail().equals(textFieldEmail.getText().strip())) {
+								PROFESSOR_LOGADO = professor;
+							}
+						}
 						frame.setVisible(false);
 						ViewInicial.main(null);
 					} else {
@@ -132,7 +163,7 @@ public class ViewLogin {
 		lblSemCadastro.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ViewCadastro.main(null);
+				ViewCadastroProfessor.main(null);
 				frame.setVisible(false);
 			}
 		});
@@ -167,6 +198,12 @@ public class ViewLogin {
 		frame.getContentPane().add(chckbxMostrarSenha);
 		
 		textFieldSenha = new JTextField();
+		textFieldSenha.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textFieldSenha.setFocusable(true);
+			}
+		});
 		textFieldSenha.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 17));
 		textFieldSenha.setColumns(10);
 		textFieldSenha.setBounds(152, 259, 330, 30);

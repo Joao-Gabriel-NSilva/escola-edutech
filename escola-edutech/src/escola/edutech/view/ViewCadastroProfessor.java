@@ -20,7 +20,7 @@ import javax.swing.UIManager;
 import escola.edutech.dao.ProfessorDAO;
 import escola.edutech.modelo.Professor;
 
-public class ViewCadastro {
+public class ViewCadastroProfessor {
 
 	private JFrame frame;
 	private JTextField textFieldNome;
@@ -45,7 +45,7 @@ public class ViewCadastro {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ViewCadastro window = new ViewCadastro();
+					ViewCadastroProfessor window = new ViewCadastroProfessor();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,7 +57,7 @@ public class ViewCadastro {
 	/**
 	 * Create the application.
 	 */
-	public ViewCadastro() {
+	public ViewCadastroProfessor() {
 		initialize();
 	}
 
@@ -169,7 +169,7 @@ public class ViewCadastro {
 					}
 					
 					if(ProfessorDAO.adicionar(new Professor(textFieldNome.getText(), textFieldEmail.getText(), 
-							listaTurmas, textFieldTurno.getText()))) {
+							listaTurmas, textFieldTurno.getText(), true))) {
 						
 						String senha;
 						if (passwordField.isEnabled()) {

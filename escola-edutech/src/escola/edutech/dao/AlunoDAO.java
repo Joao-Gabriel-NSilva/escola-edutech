@@ -13,20 +13,24 @@ import java.util.List;
 import java.util.Scanner;
 
 import escola.edutech.modelo.Aluno;
+import escola.edutech.view.ViewLogin;
 
 public class AlunoDAO {
 
-	private static File arquivoAlunos = new File("dados/alunos.csv");
-	private static File arquivoCgms = new File("dados/cgms.csv");
+	public static File ARQUIVO_ALUNOS_CADASTRADOS = new File("dados/alunosCadastrados.csv");
+	public static File ARQUIVO_CGMS = new File("dados/cgms.csv");
 	private static List<String> cgms = new ArrayList<>();
 
-	public static boolean adicionar(Aluno aluno) {
+	public static boolean adicionar(Aluno aluno, File arquivo, boolean addCgm) {
 		pathBuilder();
-		try (FileWriter writer = new FileWriter(arquivoAlunos, true)) {
+		try (FileWriter writer = new FileWriter(arquivo, true)) {
 			try (PrintWriter saida = new PrintWriter(writer, true)) {
 				saida.println(aluno.getNome() + ";" + aluno.getEmail() + ";" + aluno.getTurma() + ";" + aluno.getCgm()
 						+ ";" + aluno.getTurno() + ";" + aluno.getStatus());
-				adicionaCgm(aluno.getCgm());
+				if(addCgm) {
+					adicionaCgm(aluno.getCgm());
+				}
+				ProfessorDAO.adicionaAluno(ViewLogin.PROFESSOR_LOGADO, aluno);
 				return true;
 			}
 		} catch (IOException e) {
@@ -35,11 +39,11 @@ public class AlunoDAO {
 		return false;
 	}
 
-	public static List<Aluno> listar() {
+	public static List<Aluno> listar(File arquivo) {
 		pathBuilder();
 		List<Aluno> alunos = new ArrayList<Aluno>();
 		try {
-			Scanner scanner = new Scanner(arquivoAlunos, "UTF-8");
+			Scanner scanner = new Scanner(arquivo, "UTF-8");
 			while (scanner.hasNextLine()) {
 				String linha = scanner.nextLine();
 				Scanner linhaScanner = new Scanner(linha);
@@ -64,9 +68,9 @@ public class AlunoDAO {
 
 	private static void pathBuilder() {
 		try {
-			if (!arquivoAlunos.exists()) {
+			if (!ARQUIVO_ALUNOS_CADASTRADOS.exists()) {
 				Files.createDirectories(Paths.get("dados"));
-				try (FileWriter writer = new FileWriter(arquivoAlunos, true)) {
+				try (FileWriter writer = new FileWriter(ARQUIVO_ALUNOS_CADASTRADOS, true)) {
 				}
 			}
 		} catch (IOException e1) {
@@ -76,11 +80,11 @@ public class AlunoDAO {
 
 	public static boolean jaExiste(Aluno aluno) {
 		listarCgms();
-		return new HashSet<Aluno>(listar()).contains(aluno);
+		return new HashSet<Aluno>(listar(ARQUIVO_ALUNOS_CADASTRADOS)).contains(aluno);
 	}
 
 	private static void adicionaCgm(String cgm) {
-		try (FileWriter writer = new FileWriter(arquivoCgms, true)) {
+		try (FileWriter writer = new FileWriter(ARQUIVO_CGMS, true)) {
 			try (PrintWriter saida = new PrintWriter(writer, true)) {
 				saida.println(cgm);
 			}
@@ -91,7 +95,7 @@ public class AlunoDAO {
 	
 	private static void listarCgms() {
 		try {
-			Scanner scanner = new Scanner(arquivoAlunos, "UTF-8");
+			Scanner scanner = new Scanner(ARQUIVO_ALUNOS_CADASTRADOS, "UTF-8");
 			while (scanner.hasNextLine()) {
 				String linha = scanner.nextLine();
 				Scanner linhaScanner = new Scanner(linha);
