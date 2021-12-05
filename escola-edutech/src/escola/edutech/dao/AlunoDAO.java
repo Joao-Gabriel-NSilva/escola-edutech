@@ -21,7 +21,7 @@ public class AlunoDAO {
 	public static File ARQUIVO_CGMS = new File("dados/cgms.csv");
 	private static List<String> cgms = new ArrayList<>();
 
-	public static boolean adicionar(Aluno aluno, File arquivo, boolean addCgm) {
+	public static boolean adicionar(Aluno aluno, File arquivo, boolean addCgm, boolean cadastro) {
 		pathBuilder();
 		try (FileWriter writer = new FileWriter(arquivo, true)) {
 			try (PrintWriter saida = new PrintWriter(writer, true)) {
@@ -30,7 +30,9 @@ public class AlunoDAO {
 				if(addCgm) {
 					adicionaCgm(aluno.getCgm());
 				}
-				ProfessorDAO.adicionaAluno(ViewLogin.PROFESSOR_LOGADO, aluno);
+				if(cadastro) {
+					ProfessorDAO.adicionaAluno(ViewLogin.PROFESSOR_LOGADO, aluno);
+				}
 				return true;
 			}
 		} catch (IOException e) {

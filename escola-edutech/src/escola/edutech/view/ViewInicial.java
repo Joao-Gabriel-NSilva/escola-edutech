@@ -66,6 +66,12 @@ public class ViewInicial {
 		frmMenuInicial.getContentPane().add(btnCadastrarAluno);
 		
 		JButton btnConsultarCadastro = new JButton("CONSULTAR CADASTRO");
+		btnConsultarCadastro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frmMenuInicial.setVisible(false);
+				ViewConsultaAlunos.main(null);
+			}
+		});
 		btnConsultarCadastro.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
 		btnConsultarCadastro.setBounds(197, 219, 249, 57);
 		frmMenuInicial.getContentPane().add(btnConsultarCadastro);

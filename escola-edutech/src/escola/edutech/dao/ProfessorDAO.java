@@ -21,8 +21,7 @@ public class ProfessorDAO {
 
 	private static File arquivoProfessores = new File("dados/professores.csv");
 	private static File arquivoLogin = new File("dados/logins.csv");
-	private static File arquivoAlunosProfessor = new File("dados/alunosDoProfessor" + ViewLogin.PROFESSOR_LOGADO.getNome() 
-	+ ".csv");
+	private static File arquivoAlunosProfessor;
 
 	public static boolean adicionar(Professor professor) {
 		pathBuilder(arquivoProfessores);
@@ -149,7 +148,12 @@ public class ProfessorDAO {
 	}
 	
 	public static void adicionaAluno(Professor professorLogado, Aluno aluno) {
-		AlunoDAO.adicionar(aluno, arquivoAlunosProfessor, false);
+		try {
+			arquivoAlunosProfessor = new File("dados/alunosDoProfessor" + ViewLogin.PROFESSOR_LOGADO.getNome()+ ".csv");
+		} catch(Exception e) {
+			
+		}
+		AlunoDAO.adicionar(aluno, arquivoAlunosProfessor, false, false);
 	}
 	
 	public static List<Aluno> listarAlunos() {
