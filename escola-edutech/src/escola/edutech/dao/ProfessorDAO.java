@@ -19,13 +19,13 @@ import escola.edutech.view.ViewLogin;
 
 public class ProfessorDAO {
 
-	private static File arquivoProfessores = new File("dados/professores.csv");
-	private static File arquivoLogin = new File("dados/logins.csv");
-	private static File arquivoAlunosProfessor;
+	private static File ARQUIVO_PROFESSORES = new File("dados/professores.csv");
+	private static File ARQUIVO_LOGIN = new File("dados/logins.csv");
+	private static File ARQUIVO_ALUNOS_PROFESSOR;
 
 	public static boolean adicionar(Professor professor) {
-		pathBuilder(arquivoProfessores);
-		try (FileWriter writer = new FileWriter(arquivoProfessores, true)) {
+		pathBuilder(ARQUIVO_PROFESSORES);
+		try (FileWriter writer = new FileWriter(ARQUIVO_PROFESSORES, true)) {
 			try (PrintWriter saida = new PrintWriter(writer, true)) {
 				saida.println(professor.getNome() + ";" + professor.getEmail() + ";" + professor.getTurmas() + ";"
 						+ professor.getTurno());
@@ -38,10 +38,10 @@ public class ProfessorDAO {
 	}
 
 	public static List<Professor> listar() {
-		pathBuilder(arquivoProfessores);
+		pathBuilder(ARQUIVO_PROFESSORES);
 		List<Professor> professores = new ArrayList<Professor>();
 		try {
-			Scanner scanner = new Scanner(arquivoProfessores, "UTF-8");
+			Scanner scanner = new Scanner(ARQUIVO_PROFESSORES, "UTF-8");
 			while (scanner.hasNextLine()) {
 				String linha = scanner.nextLine();
 				Scanner linhaScanner = new Scanner(linha);
@@ -50,18 +50,18 @@ public class ProfessorDAO {
 				String nome = linhaScanner.next();
 				String email = linhaScanner.next();
 				String turmas = linhaScanner.next();
-				
+
 				List<String> listaTurmas = new ArrayList<>();
 				for (String turma : turmas.split(",", 9)) {
-					if(turma.startsWith("[")) {
+					if (turma.startsWith("[")) {
 						turma = turma.replace("[", "");
-					} else if(turma.endsWith("]")) {
+					} else if (turma.endsWith("]")) {
 						turma = turma.replace("]", "");
 					}
 					turma = turma.strip();
 					listaTurmas.add(turma);
 				}
-				
+
 				String turno = linhaScanner.next();
 
 				professores.add(new Professor(nome, email, listaTurmas, turno, false));
@@ -76,7 +76,7 @@ public class ProfessorDAO {
 
 	private static void pathBuilder(File arquivo) {
 		try {
-			if (!arquivoProfessores.exists()) {
+			if (!ARQUIVO_PROFESSORES.exists()) {
 				Files.createDirectories(Paths.get("dados"));
 				try (FileWriter writer = new FileWriter(arquivo, true)) {
 				}
@@ -87,9 +87,9 @@ public class ProfessorDAO {
 	}
 
 	public static void salvaLogin(String email, String senha) {
-		pathBuilder(arquivoLogin);
-		
-		try (FileWriter writer = new FileWriter(arquivoLogin, true)) {
+		pathBuilder(ARQUIVO_LOGIN);
+
+		try (FileWriter writer = new FileWriter(ARQUIVO_LOGIN, true)) {
 			try (PrintWriter saida = new PrintWriter(writer, true)) {
 				saida.println(email + ";" + senha);
 			}
@@ -97,12 +97,12 @@ public class ProfessorDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static Map<String, String> listaLogins() {
-		pathBuilder(arquivoLogin);
+		pathBuilder(ARQUIVO_LOGIN);
 		Map<String, String> listaLogins = new HashMap<>();
 		try {
-			Scanner scanner = new Scanner(arquivoLogin, "UTF-8");
+			Scanner scanner = new Scanner(ARQUIVO_LOGIN, "UTF-8");
 			while (scanner.hasNextLine()) {
 				String linha = scanner.nextLine();
 				Scanner linhaScanner = new Scanner(linha);
@@ -120,25 +120,26 @@ public class ProfessorDAO {
 		}
 		return listaLogins;
 	}
-	
+
 	public static void adicionaTurma(Professor professorLogado, String turma) {
-		if(turma.strip().isEmpty()) {
+		if (turma.strip().isEmpty()) {
 			throw new RuntimeException("Informe o código da turma!");
-		} else if(turma.length() < 9 | turma.length() > 9) {
-			throw new RuntimeException("O código da turma deve conter nove digitos! Exemplo: 3A2021EED (série + ano + EED");
+		} else if (turma.length() < 9 | turma.length() > 9) {
+			throw new RuntimeException(
+					"O código da turma deve conter nove digitos! Exemplo: 3A2021EED (série + ano + EED");
 		} else {
-			
+
 			List<Professor> professores = listar();
 			try {
-				new FileWriter(arquivoProfessores).close();
+				new FileWriter(ARQUIVO_PROFESSORES).close();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			
+
 			for (Professor professorArquivo : professores) {
-				if(professorLogado.equals(professorArquivo)) {
+				if (professorLogado.equals(professorArquivo)) {
 					professorLogado.getTurmas().add(turma);
-					adicionar(new Professor(professorLogado.getNome(), professorLogado.getEmail(), 
+					adicionar(new Professor(professorLogado.getNome(), professorLogado.getEmail(),
 							professorLogado.getTurmas(), professorLogado.getTurno(), false));
 				} else {
 					adicionar(professorArquivo);
@@ -146,18 +147,38 @@ public class ProfessorDAO {
 			}
 		}
 	}
-	
+
 	public static void adicionaAluno(Professor professorLogado, Aluno aluno) {
 		try {
-			arquivoAlunosProfessor = new File("dados/alunosDoProfessor" + ViewLogin.PROFESSOR_LOGADO.getNome()+ ".csv");
-		} catch(Exception e) {
+			if (ARQUIVO_ALUNOS_PROFESSOR == null) {
+				ARQUIVO_ALUNOS_PROFESSOR = new File(
+						"dados/alunosDoProfessor" + ViewLogin.PROFESSOR_LOGADO.getNome() + ".csv");
+
+			}
+			AlunoDAO.adicionar(aluno, ARQUIVO_ALUNOS_PROFESSOR, false, false);
+		} catch (Exception ex) {
+
+		}
+	}
+
+	public static List<Aluno> listarAlunos() {
+		return AlunoDAO.listar(ARQUIVO_ALUNOS_PROFESSOR);
+	}
+
+	public static void atualizaAlunoProfessor(List<Aluno> alunos) {
+		if (ARQUIVO_ALUNOS_PROFESSOR == null) {
+			ARQUIVO_ALUNOS_PROFESSOR = new File(
+					"dados/alunosDoProfessor" + ViewLogin.PROFESSOR_LOGADO.getNome() + ".csv");
+
+		}
+		try {
+			new FileWriter(ARQUIVO_ALUNOS_PROFESSOR).close();
+		} catch (Exception e) {
 			
 		}
-		AlunoDAO.adicionar(aluno, arquivoAlunosProfessor, false, false);
+		for (Aluno aluno : alunos) {
+			AlunoDAO.adicionar(aluno, ARQUIVO_ALUNOS_PROFESSOR, false, false);
+		}
 	}
-	
-	public static List<Aluno> listarAlunos() {
-		return AlunoDAO.listar(arquivoAlunosProfessor);
-	}
-}
 
+}

@@ -3,13 +3,19 @@ package escola.edutech.view;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -20,12 +26,6 @@ import escola.edutech.dao.AlunoDAO;
 import escola.edutech.dao.ProfessorDAO;
 import escola.edutech.modelo.Aluno;
 import escola.edutech.modelo.Professor;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ViewConsultaAlunos {
 
@@ -111,10 +111,34 @@ public class ViewConsultaAlunos {
 				ViewInicial.main(null);
 			}
 		});
-		btnVoltar.setHorizontalAlignment(SwingConstants.RIGHT);
 		btnVoltar.setFont(new Font("Arial Narrow", Font.PLAIN, 13));
 		btnVoltar.setBounds(0, 0, 77, 33);
 		frame.getContentPane().add(btnVoltar);
+		
+		JButton btnAtualizarInformacoes = new JButton("ATUALIZAR INFORMAÇÕES");
+		btnAtualizarInformacoes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					List<Aluno> alunos = AlunoDAO.listar(AlunoDAO.ARQUIVO_ALUNOS_CADASTRADOS);
+					String cgm = (String) modelo.getValueAt(tabela.getSelectedRow(), 3);
+					for (Aluno aluno : alunos) {
+						if(aluno.getCgm().equals(cgm)) {
+							ViewAtualizaAluno.ALUNO = new Aluno(aluno.getNome(), aluno.getEmail(), aluno.getTurma(),
+									aluno.getCgm(), aluno.getTurno(), aluno.getStatus(), false, aluno.getNomeProfessor(),
+									aluno.getEmailProfessor());
+							frame.setVisible(false);
+							ViewAtualizaAluno.main(null);
+						}
+					}
+				} catch (ArrayIndexOutOfBoundsException ex) {
+					JOptionPane.showMessageDialog(null, "Selecione o aluno que deseja atualizar!", "", 
+							JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		btnAtualizarInformacoes.setFont(new Font("Arial Narrow", Font.PLAIN, 16));
+		btnAtualizarInformacoes.setBounds(345, 425, 217, 33);
+		frame.getContentPane().add(btnAtualizarInformacoes);
 		
 		modelo = (DefaultTableModel) tabela.getModel();
 		modelo.addColumn("NOME");
@@ -128,6 +152,7 @@ public class ViewConsultaAlunos {
 	}
 	
 	private void preencherTabela() {
+		
 		File arquivo;
 		if(comboBoxProfessores.getSelectedItem().toString().equals("Todos os alunos")) {
 			arquivo = AlunoDAO.ARQUIVO_ALUNOS_CADASTRADOS;
@@ -147,13 +172,8 @@ public class ViewConsultaAlunos {
 	}
 	
 	private void limparTabela() {
-		List<Aluno> alunos = AlunoDAO.listar(AlunoDAO.ARQUIVO_ALUNOS_CADASTRADOS);
 		try {
 			modelo.getDataVector().clear();
-//			modelo.addRow(new Object[] { "", "", "", "", "" });
-//			for (Aluno aluno : alunos) {
-//				modelo.addRow(new Object[] { "", "", "", "", "" });
-//			}
 		} catch (Exception e) {
 			
 		}

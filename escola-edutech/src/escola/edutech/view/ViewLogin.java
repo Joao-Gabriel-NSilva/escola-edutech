@@ -23,8 +23,6 @@ import javax.swing.UIManager;
 
 import escola.edutech.dao.ProfessorDAO;
 import escola.edutech.modelo.Professor;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class ViewLogin {
 

@@ -22,15 +22,16 @@ public class AlunoDAO {
 	private static List<String> cgms = new ArrayList<>();
 
 	public static boolean adicionar(Aluno aluno, File arquivo, boolean addCgm, boolean cadastro) {
-		pathBuilder();
+		pathBuilder(arquivo);
 		try (FileWriter writer = new FileWriter(arquivo, true)) {
 			try (PrintWriter saida = new PrintWriter(writer, true)) {
 				saida.println(aluno.getNome() + ";" + aluno.getEmail() + ";" + aluno.getTurma() + ";" + aluno.getCgm()
-						+ ";" + aluno.getTurno() + ";" + aluno.getStatus());
-				if(addCgm) {
+						+ ";" + aluno.getTurno() + ";" + aluno.getStatus() + ";" + aluno.getProfessor().getNome() + ";"
+						+ aluno.getProfessor().getEmail());
+				if (addCgm) {
 					adicionaCgm(aluno.getCgm());
 				}
-				if(cadastro) {
+				if (cadastro) {
 					ProfessorDAO.adicionaAluno(ViewLogin.PROFESSOR_LOGADO, aluno);
 				}
 				return true;
@@ -42,7 +43,7 @@ public class AlunoDAO {
 	}
 
 	public static List<Aluno> listar(File arquivo) {
-		pathBuilder();
+		pathBuilder(arquivo);
 		List<Aluno> alunos = new ArrayList<Aluno>();
 		try {
 			Scanner scanner = new Scanner(arquivo, "UTF-8");
@@ -57,8 +58,10 @@ public class AlunoDAO {
 				String cgm = linhaScanner.next();
 				String turno = linhaScanner.next();
 				String status = linhaScanner.next();
+				String nomeProfessor = linhaScanner.next();
+				String emailProfessor = linhaScanner.next();
 
-				alunos.add(new Aluno(nome, email, turma, cgm, turno, status));
+				alunos.add(new Aluno(nome, email, turma, cgm, turno, status, false, nomeProfessor, emailProfessor));
 				linhaScanner.close();
 			}
 			scanner.close();
@@ -68,11 +71,11 @@ public class AlunoDAO {
 		return alunos;
 	}
 
-	private static void pathBuilder() {
+	private static void pathBuilder(File arquivo) {
 		try {
-			if (!ARQUIVO_ALUNOS_CADASTRADOS.exists()) {
+			if (!arquivo.exists()) {
 				Files.createDirectories(Paths.get("dados"));
-				try (FileWriter writer = new FileWriter(ARQUIVO_ALUNOS_CADASTRADOS, true)) {
+				try (FileWriter writer = new FileWriter(arquivo, true)) {
 				}
 			}
 		} catch (IOException e1) {
@@ -94,7 +97,7 @@ public class AlunoDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void listarCgms() {
 		try {
 			Scanner scanner = new Scanner(ARQUIVO_ALUNOS_CADASTRADOS, "UTF-8");
@@ -112,4 +115,42 @@ public class AlunoDAO {
 		}
 	}
 
+	public static void alterarInformacoes(Aluno aluno, String turma, String status) {
+		if(turma.isEmpty() & status.isEmpty()) {
+			throw new RuntimeException("Nenhuma nova informação fornecida!");
+		} 
+		
+		if(turma.isEmpty()) {
+			turma = aluno.getTurma();
+		} else if(turma.length() > 0 & turma.length() < 9 | turma.length() > 9) {
+			throw new RuntimeException("O código da turma deve conter nove digitos! Exemplo: 3A2021EED (série + ano + EED");
+		}
+			
+		if (status.isEmpty()) {
+			status = aluno.getStatus();
+		} else if(status.strip().toLowerCase().equals("ativo") | status.strip().toLowerCase().equals("inativo")){
+			status = status.strip().toUpperCase();
+		} else {
+			throw new RuntimeException("Status inválido! Utilize 'ativo' ou 'inativo'.");
+		}
+		
+		List<Aluno> alunos = listar(ARQUIVO_ALUNOS_CADASTRADOS);
+		try {
+			new FileWriter(ARQUIVO_ALUNOS_CADASTRADOS).close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		for (Aluno aluno2 : alunos) {
+			if(aluno.equals(aluno2)) {
+				Aluno a = new Aluno(aluno.getNome(), aluno.getEmail(), turma, aluno.getCgm(), aluno.getTurno(), status,
+						false, aluno.getNomeProfessor(), aluno.getEmailProfessor());
+				adicionar(a, ARQUIVO_ALUNOS_CADASTRADOS, false, false);
+			} else {
+				adicionar(aluno2, ARQUIVO_ALUNOS_CADASTRADOS, false, false);
+			}
+		}
+		ProfessorDAO.atualizaAlunoProfessor(listar(ARQUIVO_ALUNOS_CADASTRADOS));
+		
+	}
+	
 }

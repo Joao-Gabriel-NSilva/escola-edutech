@@ -46,7 +46,7 @@ public class Professor {
 
 	@Override
 	public String toString() {
-		return new String(nome + ", " + email + ", " + turmas + ", " + turno);
+		return nome;
 	}
 
 	private boolean verificaInformacoes(String nome, String email, List<String> turmas, String turno) {

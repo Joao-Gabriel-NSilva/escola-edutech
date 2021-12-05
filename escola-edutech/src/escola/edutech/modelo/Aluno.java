@@ -1,5 +1,10 @@
 package escola.edutech.modelo;
 
+import java.util.List;
+
+import escola.edutech.dao.ProfessorDAO;
+import escola.edutech.view.ViewLogin;
+
 public class Aluno implements Comparable<Aluno>{
 
 	private String nome;
@@ -8,9 +13,31 @@ public class Aluno implements Comparable<Aluno>{
 	private String cgm;
 	private String turno;
 	private String status;
+	private Professor professor;
+	private String nomeProfessor;
+	private String emailProfessor;
 
-	public Aluno(String nome, String email, String turma, String cgm, String turno, String status) {
-		verificaInformacoes(nome, email, turma, cgm, turno, status);
+	public Aluno(String nome, String email, String turma, String cgm, String turno, String status, boolean fazVerificacao,
+			String nomeProf, String emailProf) {
+		if(fazVerificacao) {
+			verificaInformacoes(nome, email, turma, cgm, turno, status);
+			this.professor = ViewLogin.PROFESSOR_LOGADO;
+		} else {
+			this.nome = nome;
+			this.email = email;
+			this.turma = turma;
+			this.cgm = cgm;
+			this.turno = turno;
+			this.status = status;
+			this.nomeProfessor = nomeProf;
+			this.emailProfessor = emailProf;
+			List<Professor> professores = ProfessorDAO.listar();
+			for (Professor professor : professores) {
+				if(professor.getNome().equals(nomeProf) & professor.getEmail().equals(emailProf)) {
+					this.professor = professor;
+				}
+			}
+		}
 	}
 
 	public String getNome() {
@@ -36,16 +63,21 @@ public class Aluno implements Comparable<Aluno>{
 	public String getStatus() {
 		return status;
 	}
-	
-	@Override
-	public String toString() {
-		return new String(nome + ", " + email + ", " + turma + ", " + cgm + ", " + turno + ", " + status);
+	public Professor getProfessor() {
+		return professor;
 	}
 	
+	public String getNomeProfessor() {
+		return nomeProfessor;
+	}
+
+	public String getEmailProfessor() {
+		return emailProfessor;
+	}
 
 	@Override
 	public int compareTo(Aluno aluno) {
-		return this.cgm.compareTo(aluno.getCgm());
+		return this.nome.compareTo(aluno.getNome());
 	}
 
 	@Override
@@ -92,7 +124,7 @@ public class Aluno implements Comparable<Aluno>{
 		} else if(turma.length() < 9 | turma.length() > 9) {
 			throw new RuntimeException("O código da turma deve conter nove digitos! Exemplo: 3A2021EED (série + ano + EED");
 		} else {
-			this.turma = turma.strip();
+			this.turma = turma.strip().toUpperCase();
 		}
 		
 		if(cgm.strip().isEmpty()) {
@@ -122,6 +154,7 @@ public class Aluno implements Comparable<Aluno>{
 		} else {
 			throw new RuntimeException("Status inválido! Utilize 'ativo' ou 'inativo'.");
 		}
+		
 		return true;
 	}
 

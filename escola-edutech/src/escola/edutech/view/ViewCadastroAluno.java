@@ -137,7 +137,8 @@ public class ViewCadastroAluno {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Aluno aluno = new Aluno(textFieldNome.getText(), textFieldEmail.getText(), textFieldTurma.getText(),
-							textFieldCgm.getText(), textFieldTurno.getText(), textFieldStatus.getText());
+							textFieldCgm.getText(), textFieldTurno.getText(), textFieldStatus.getText(), true, 
+							ViewLogin.PROFESSOR_LOGADO.getNome(), ViewLogin.PROFESSOR_LOGADO.getEmail());
 					if (!AlunoDAO.jaExiste(aluno)) {
 						if(AlunoDAO.adicionar(aluno, AlunoDAO.ARQUIVO_ALUNOS_CADASTRADOS, true, true)) {
 							JOptionPane.showMessageDialog(null, "Cadastro concluido!", "", JOptionPane.INFORMATION_MESSAGE);

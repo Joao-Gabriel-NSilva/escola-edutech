@@ -121,7 +121,7 @@ public class ViewCadastroProfessor {
 		JLabel lblCadastroDeProfessor = new JLabel("CADASTRO DE PROFESSOR");
 		lblCadastroDeProfessor.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCadastroDeProfessor.setFont(new Font("Arial Narrow", Font.PLAIN, 35));
-		lblCadastroDeProfessor.setBounds(5, 0, 634, 41);
+		lblCadastroDeProfessor.setBounds(82, 0, 480, 41);
 		frame.getContentPane().add(lblCadastroDeProfessor);
 		
 		lblSenha = new JLabel("Senha:");
@@ -179,7 +179,7 @@ public class ViewCadastroProfessor {
 						}
 						
 						ProfessorDAO.salvaLogin(textFieldEmail.getText(), senha);
-						JOptionPane.showMessageDialog(null, "Cadastro concluido!", "", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Cadastro concluido!", "", JOptionPane.INFORMATION_MESSAGE);
 						
 						
 						frame.setVisible(false);
@@ -195,5 +195,22 @@ public class ViewCadastroProfessor {
 		botaoCadastrar.setFont(new Font("Arial Narrow", Font.PLAIN, 20));
 		botaoCadastrar.setBounds(243, 401, 157, 30);
 		frame.getContentPane().add(botaoCadastrar);
+		
+		JLabel lblExemploCodigo = new JLabel("Exemplo: 1A2021EED (série + ano + EED). Separe diferentes turmas com uma vírgula.");
+		lblExemploCodigo.setHorizontalAlignment(SwingConstants.LEFT);
+		lblExemploCodigo.setBounds(174, 253, 454, 14);
+		frame.getContentPane().add(lblExemploCodigo);
+		
+		JButton btnVoltar = new JButton("VOLTAR");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+				ViewLogin.main(null);
+			}
+		});
+		btnVoltar.setHorizontalAlignment(SwingConstants.RIGHT);
+		btnVoltar.setFont(new Font("Arial Narrow", Font.PLAIN, 13));
+		btnVoltar.setBounds(88, 407, 77, 23);
+		frame.getContentPane().add(btnVoltar);
 	}
 }
